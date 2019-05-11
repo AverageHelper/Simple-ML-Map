@@ -8,17 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		85A582C5228617AC0045816C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 85A582C4228617AC0045816C /* main.cpp */; };
+		85AA98DC2286532A00DA8715 /* 1Nephi.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 85A582CD228618270045816C /* 1Nephi.txt */; };
+		85AA98DD2286532A00DA8715 /* Nephi_Trump.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 85A582CF228618270045816C /* Nephi_Trump.txt */; };
+		85AA98DE2286532A00DA8715 /* Trump.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = 85A582CE228618270045816C /* Trump.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		85A582BF228617AC0045816C /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
 			files = (
+				85AA98DC2286532A00DA8715 /* 1Nephi.txt in CopyFiles */,
+				85AA98DD2286532A00DA8715 /* Nephi_Trump.txt in CopyFiles */,
+				85AA98DE2286532A00DA8715 /* Trump.txt in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 

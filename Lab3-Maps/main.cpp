@@ -48,7 +48,7 @@ int main() {
 //            outFS << *it;
 //            std::cout << *it << std::endl;
         }
-        std::cout << std::endl << stringSet.size() << " elements in set." << std::endl;
+        std::cout << std::endl << stringSet.size() << " elements in set for '" << docName << "'." << std::endl;
         stringSet.clear();
         
         outFS.close();
@@ -93,7 +93,7 @@ int main() {
 //            outFS << *it;
 //            std::cout << *it << std::endl;
         }
-        std::cout << std::endl << stringVector.size() << " elements in vector." << std::endl;
+        std::cout << std::endl << stringVector.size() << " elements in vector for '" << docName << "'." << std::endl;
         stringVector.clear();
         
         outFS.close();
@@ -109,7 +109,9 @@ int main() {
     
     // 5. Generate text from a map that pairs strings (keys) to a vector of strings (values).
     
+    
     // 6. Generate text from a map composed of a list of strings as keys and vectors of strings as values.
+    
     
     // 7. Explore different texts and methods, and observe when the algorithm produces interesting
     //      things. Have a little fun. Discuss what you did in your Canvas Submission.

@@ -4,102 +4,120 @@
 #include <set>
 #include <map>
 
-int main() {
-    std::string doc1Name = "1Nephi.txt";
-    std::string doc2Name = "Nephi_Trump.txt";
-    std::string doc3Name = "Trump.txt";
+/*
+ *  A Very Basic Natural Language Processing Model
+ *
+ *  Pairing words together, and remembering that they've been seen before.
+ *
+ */
+
+void stripPunctuation(std::string &str) {
     
-    std::vector<std::string> inputFiles = {doc1Name, doc2Name, doc3Name};
+    std::string finalStr = "";
+    
+    for (int i = 0; i < str.size(); i++) {
+        if (isalpha(str.at(i))) {
+            finalStr.push_back(str.at(i));
+        }
+    }
+    
+    str = finalStr;
+    
+}
+
+int main() {
+    std::string docName = "";
+    
+    std::cout << "Enter the name of a text file: ";
+    std::cin  >> docName;
+    std::cout << std::endl;
     
     // 1. Read the document into a set of strings and print them to a file.
-    for (unsigned int i = 0; i < inputFiles.size(); i++) {
-        std::string outputFileName = "SetOutput.txt";
-        std::string docName = inputFiles.at(i);
-        
-        // Open an input file
-        std::ifstream inFS;
-        inFS.open(docName);
-        
-        if (!inFS.is_open()) {
-            std::cout << "Couldn't open " << docName << " for reading." << std::endl;
-            return 1;
-        }
-        
-        // Read into string set
-        std::set<std::string> stringSet;
-        
-        while (!inFS.eof()) {
-            std::string newString = "";
-            inFS >> newString;
-            stringSet.insert(newString);
-        }
-        
-        inFS.close();
-        
-        // Output to file
-        std::ofstream outFS;
-        outFS.open(outputFileName);
-        
-        if (!outFS.is_open()) {
-            std::cout << "Couldn't open " << outputFileName << " for writing." << std::endl;
-        }
-        
-        for (std::set<std::string>::iterator it = stringSet.begin(); it != stringSet.end(); it++) {
-//            outFS << *it;
-//            std::cout << *it << std::endl;
-        }
-        std::cout << std::endl << stringSet.size() << " elements in set for '" << docName << "'." << std::endl;
-        stringSet.clear();
-        
-        outFS.close();
-        
-        std::cout << "File written to " << outputFileName << std::endl;
+    std::string setOutputFilename = docName + "_set.txt";
+    
+    // Open an input file
+    std::ifstream inFS;
+    inFS.open(docName + ".txt");
+    
+    if (!inFS.is_open()) {
+        std::cout << "Couldn't open " << docName << ".txt for reading." << std::endl;
+        return 1;
     }
     
-    // 2. Read the document into a vector of strings and print them to a file.
-    for (unsigned int i = 0; i < inputFiles.size(); i++) {
-        std::string outputFileName = "VectorOutput.txt";
-        std::string docName = inputFiles.at(i);
-        
-        // Open an input file
-        std::ifstream inFS;
-        inFS.open(docName);
-        
-        if (!inFS.is_open()) {
-            std::cout << "Couldn't open " << docName << " for reading." << std::endl;
-            return 1;
-        }
-        
-        // Read into string set
-        std::vector<std::string> stringVector;
-        
-        while (!inFS.eof()) {
-            std::string newString = "";
-            inFS >> newString;
-            stringVector.push_back(newString);
-        }
-        
-        inFS.close();
-        
-        // Output to file
-        std::ofstream outFS;
-        outFS.open(outputFileName);
-        
-        if (!outFS.is_open()) {
-            std::cout << "Couldn't open " << outputFileName << " for writing." << std::endl;
-        }
-        
-        for (std::vector<std::string>::iterator it = stringVector.begin(); it != stringVector.end(); it++) {
-//            outFS << *it;
-//            std::cout << *it << std::endl;
-        }
-        std::cout << std::endl << stringVector.size() << " elements in vector for '" << docName << "'." << std::endl;
-        stringVector.clear();
-        
-        outFS.close();
-        
-        std::cout << "File written to " << outputFileName << std::endl;
+    
+    // Read into a string set
+    std::set<std::string> stringSet;
+    
+    while (!inFS.eof()) {
+        std::string newString = "";
+        inFS >> newString;
+        stripPunctuation(newString);
+        stringSet.insert(newString);
     }
+    
+    inFS.close();
+    
+    // Output to file
+    std::ofstream outFS;
+    outFS.open(setOutputFilename);
+    
+    if (!outFS.is_open()) {
+        std::cout << "Couldn't open " << setOutputFilename << " for writing." << std::endl;
+    }
+    
+    for (std::set<std::string>::iterator it = stringSet.begin(); it != stringSet.end(); it++) {
+        outFS << *it << std::endl;
+//        std::cout << *it << std::endl;
+    }
+    std::cout << std::endl << stringSet.size() << " elements in set for " << docName << ".txt" << std::endl;
+    stringSet.clear();
+    
+    outFS.close();
+    
+    std::cout << "File written to " << setOutputFilename << std::endl;
+    
+    
+    // 2. Read the document into a vector of strings and print them to a file.
+    std::string vectorOutputFilename = docName + "_vector.txt";
+    
+    // Open an input file
+    inFS.open(docName + ".txt");
+    
+    if (!inFS.is_open()) {
+        std::cout << "Couldn't open " << docName << ".txt for reading." << std::endl;
+        return 1;
+    }
+    
+    // Read into string set
+    std::vector<std::string> stringVector;
+    
+    while (!inFS.eof()) {
+        std::string newString = "";
+        inFS >> newString;
+        stripPunctuation(newString);
+        stringVector.push_back(newString);
+    }
+    
+    inFS.close();
+    
+    // Output to file
+    outFS.open(vectorOutputFilename);
+    
+    if (!outFS.is_open()) {
+        std::cout << "Couldn't open " << vectorOutputFilename << " for writing." << std::endl;
+    }
+    
+    for (std::vector<std::string>::iterator it = stringVector.begin(); it != stringVector.end(); it++) {
+        outFS << *it << std::endl;
+//        std::cout << *it << std::endl;
+    }
+    std::cout << std::endl << stringVector.size() << " elements in vector for " << docName << ".txt" << std::endl;
+    stringVector.clear();
+    
+    outFS.close();
+    
+    std::cout << "File written to " << vectorOutputFilename << std::endl;
+    
     
     // 3. Create a map from a string (the key) to a string (the value).
     std::map<std::string, std::string> stringMap;

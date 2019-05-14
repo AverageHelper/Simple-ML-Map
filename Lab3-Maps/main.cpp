@@ -70,10 +70,8 @@ int main() {
 //        std::cout << *it << std::endl;
     }
     std::cout << std::endl << stringSet.size() << " elements in set for " << docName << ".txt" << std::endl;
-    stringSet.clear();
     
     outFS.close();
-    
     std::cout << "File written to " << setOutputFilename << std::endl;
     
     
@@ -112,24 +110,61 @@ int main() {
 //        std::cout << *it << std::endl;
     }
     std::cout << std::endl << stringVector.size() << " elements in vector for " << docName << ".txt" << std::endl;
-    stringVector.clear();
     
     outFS.close();
-    
     std::cout << "File written to " << vectorOutputFilename << std::endl;
     
     
     // 3. Create a map from a string (the key) to a string (the value).
-    std::map<std::string, std::string> stringMap;
+    std::map<std::string, std::string> wordMap;
+    std::string mapOutputFilename = docName + "_1_1.txt";
+    
+    for (unsigned int i = 0; i < stringVector.size() - 1; i++) {
+        wordMap[stringVector.at(i)] = stringVector.at(i + 1);
+    }
+    
+    // Print it to a file
+    outFS.open(mapOutputFilename);
+    
+    if (!outFS.is_open()) {
+        std::cout << "Couldn't open " << mapOutputFilename << " for writing." << std::endl;
+    }
+    
+    for (std::map<std::string, std::string>::iterator it = wordMap.begin(); it != wordMap.end(); it++) {
+        outFS << it->first << ", " << it->second << std::endl;
+    }
+    
+    outFS.close();
+    std::cout << "File written to " << mapOutputFilename << std::endl;
     
     // 4. Generate text from this map.
-    // ???
+    std::map<std::string, std::string>::iterator it = wordMap.begin();
+    std::string state = it->first;
+    
+    for (int i = 0; i < 100; i++) {
+//        std::cout << wordMap[state] << " ";
+        state = wordMap[state];
+    }
+    
+    std::cout << std::endl;
     
     // 5. Generate text from a map that pairs strings (keys) to a vector of strings (values).
+    std::map<std::string, std::vector<std::string>> newMap;
+    state = "";
     
+    for (std::vector<std::string>::iterator it = stringVector.begin(); it != stringVector.end(); it++) {
+        newMap[state].push_back(*it);
+        state = *it;
+    }
+    
+    std::vector<std::string> nephiVector = newMap["Nephi"];
+    for (std::vector<std::string>::iterator it = nephiVector.begin(); it != nephiVector.end(); it++) {
+        std::cout << *it << ", ";
+    }
+    
+    std::cout << std::endl;
     
     // 6. Generate text from a map composed of a list of strings as keys and vectors of strings as values.
-    
     
     // 7. Explore different texts and methods, and observe when the algorithm produces interesting
     //      things. Have a little fun. Discuss what you did in your Canvas Submission.

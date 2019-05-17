@@ -11,24 +11,29 @@
  *
  */
 
-void cleanToken(std::string &str) {
+/// Attempts to clean `str` of trailing spaces and punctuation. If `allPunct` is true, we instead remove ALL punctuation.
+void cleanToken(std::string &str, bool allPunct = false) {
     
-//    std::string finalStr = "";
-//
-//    for (int i = 0; i < str.size(); i++) {
-//        if (isalpha(str.at(i))) {
-//            finalStr.push_back(str.at(i));
-//        }
-//    }
-//
-//    str = finalStr;
-    
-    while (!str.empty() && (isspace(str.at(0)) || ispunct(str.at(0)))) {
-        str.erase(str.begin());
-    }
-    
-    while (!str.empty() && (isspace(str.at(str.size()-1)) || ispunct(str.at(str.size()-1)))) {
-        str.erase(str.begin() + str.size() - 1);
+    if (allPunct) {
+        std::string finalStr = "";
+
+        for (int i = 0; i < str.size(); i++) {
+            if (isalpha(str.at(i))) {
+                finalStr.push_back(str.at(i));
+            }
+        }
+
+        str = finalStr;
+        
+    } else {
+        
+        while (!str.empty() && (isspace(str.at(0)) || ispunct(str.at(0)))) {
+            str.erase(str.begin());
+        }
+        
+        while (!str.empty() && (isspace(str.at(str.size()-1)) || ispunct(str.at(str.size()-1)))) {
+            str.erase(str.end() - 1);
+        }
     }
 }
 
@@ -37,6 +42,9 @@ int main() {
     
     std::cout << "Enter the name of a text file: ";
     std::cin  >> docName;
+    
+    
+    
     
     // 1. Read the document into a set of strings and print them to a file.
     std::string setOutputFilename = docName + "_set.txt";
@@ -94,7 +102,7 @@ int main() {
         return 1;
     }
     
-    // Read into string set
+    // Read into string vector
     std::vector<std::string> stringVector;
     
     while (!inFS.eof()) {
@@ -160,10 +168,10 @@ int main() {
     std::string state = it->first;
     
     for (int i = 0; i < 100; i++) {
-//        std::cout << wordMap[state] << " ";
+        std::cout << wordMap[state] << " ";
         state = wordMap[state];
     }
-//    std::cout << std::endl;
+    std::cout << std::endl;
     
     
     
@@ -198,7 +206,11 @@ int main() {
     }
     std::cout << std::endl;
     
+    
+    
+    
     // 6. Generate text from a map composed of a list of strings as keys and vectors of strings as values.
+    
     // Make it random
     srand(static_cast<unsigned int>(time(NULL)));
     
@@ -211,10 +223,148 @@ int main() {
     
     std::cout << std::endl;
     
+    
+    
+    
     // 7. Explore different texts and methods, and observe when the algorithm produces interesting
     //      things. Have a little fun. Discuss what you did in your Canvas Submission.
     
     
+    
+    // Try making a bigger string
+    
+    srand(static_cast<unsigned int>(time(NULL)));
+    std::cout << std::endl << "Bigger:" << std::endl;
+    
+    int stringSize = 1000;
+    state = "";
+    for (int i = 0; i < stringSize; i++) {
+        int index = rand() % newMap[state].size();
+        std::cout << newMap[state].at(index) << " ";
+        state = newMap[state].at(index);
+    }
+    
+    std::cout << std::endl;
+    
+    
+    
+    
+    
+    // Use a set instead.
+    std::map<std::string, std::set<std::string>> mapSet;
+    state = "";
+    
+    for (std::vector<std::string>::iterator it = stringVector.begin(); it != stringVector.end(); it++) {
+        newMap[state].push_back(*it);
+        state = *it;
+    }
+    
+    std::cout << std::endl;
+    
+    
+    
+    
+    // Print our set map
+    
+    srand(static_cast<unsigned int>(time(NULL)));
+    std::cout << std::endl << "With a set:" << std::endl;
+    
+    state = "";
+    for (int i = 0; i < 100; i++) {
+        int index = rand() % newMap[state].size();
+        std::cout << newMap[state].at(index) << " ";
+        state = newMap[state].at(index);
+    }
+    
+    std::cout << std::endl;
+    
+    
+    
+    
+    // Print our big map to a file
+    std::string bigMapOutputFilename = docName + "_2_1.txt";
+    outFS.open(bigMapOutputFilename);
+    
+    if (!outFS.is_open()) {
+        std::cout << "Couldn't open " << bigMapOutputFilename << " for writing." << std::endl;
+        return 1;
+    }
+    
+    for (std::map<std::string, std::vector<std::string>>::iterator it = newMap.begin(); it != newMap.end(); it++) {
+        outFS << "\"" << it->first << "\": " << it->second.size() << " adjacent words" << std::endl;
+        
+        for (std::vector<std::string>::iterator sit = it->second.begin(); sit != it->second.end(); sit++) {
+            outFS << "\t" << *sit << std::endl;
+        }
+        outFS << std::endl;
+    }
+    
+    outFS.close();
+    std::cout << "Big map written to " << bigMapOutputFilename << std::endl;
+    
+    
+    
+    
+    
+    // Print our set map to a file
+    std::string setMapOutputFilename = docName + "_2_2.txt";
+    outFS.open(setMapOutputFilename);
+    
+    if (!outFS.is_open()) {
+        std::cout << "Couldn't open " << setMapOutputFilename << " for writing." << std::endl;
+        return 1;
+    }
+    
+    for (std::map<std::string, std::set<std::string>>::iterator it = mapSet.begin(); it != mapSet.end(); it++) {
+        outFS << "\"" << it->first << "\": " << it->second.size() << " adjacent words" << std::endl;
+        
+        for (std::set<std::string>::iterator sit = it->second.begin(); sit != it->second.end(); sit++) {
+            outFS << "\t" << *sit << std::endl;
+        }
+        outFS << std::endl;
+    }
+    
+    outFS.close();
+    std::cout << "Big map written to " << setMapOutputFilename << std::endl;
+    
+    
+    
+    
+    // Ask the user how they want to inspect their handiwork
+    std::string userString = "";
+    const std::string EXIT_COMMAND = "QUIT";
+    
+    while (userString != EXIT_COMMAND) {
+        std::cout << "Enter a word (or " << EXIT_COMMAND << " to exit): " << std::endl;
+        std::cin  >> userString;
+        
+        std::cout << std::endl << "\"" << userString << "\": " << std::endl;
+        
+        if (newMap.find(userString) == newMap.end()) {
+            std::cout << "Not found. Try another!" << std::endl;
+            continue;
+        }
+        std::vector<std::string> adjacentWords = newMap[userString];
+        
+        std::cout << adjacentWords.size() << " adjacent words:" << std::endl;
+        std::cout << "[";
+        
+        for (std::vector<std::string>::iterator wi = adjacentWords.begin(); wi != adjacentWords.end(); wi++) {
+            std::cout << *wi;
+            
+            if (wi + 1 != adjacentWords.end()) {
+                std::cout << ", ";
+            } else {
+                std::cout << "]" << std::endl << std::endl;
+            }
+        }
+        
+        std::cout << "Try another!" << std::endl;
+    }
+    
+    
+    
+    // Try running this on an output file! :)
     
     return 0;
 }

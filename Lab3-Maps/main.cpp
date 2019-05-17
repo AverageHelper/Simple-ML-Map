@@ -11,18 +11,25 @@
  *
  */
 
-void stripPunctuation(std::string &str) {
+void cleanToken(std::string &str) {
     
-    std::string finalStr = "";
+//    std::string finalStr = "";
+//
+//    for (int i = 0; i < str.size(); i++) {
+//        if (isalpha(str.at(i))) {
+//            finalStr.push_back(str.at(i));
+//        }
+//    }
+//
+//    str = finalStr;
     
-    for (int i = 0; i < str.size(); i++) {
-        if (isalpha(str.at(i))) {
-            finalStr.push_back(str.at(i));
-        }
+    while (!str.empty() && (isspace(str.at(0)) || ispunct(str.at(0)))) {
+        str.erase(str.begin());
     }
     
-    str = finalStr;
-    
+    while (!str.empty() && (isspace(str.at(str.size()-1)) || ispunct(str.at(str.size()-1)))) {
+        str.erase(str.begin() + str.size() - 1);
+    }
 }
 
 int main() {
@@ -30,7 +37,6 @@ int main() {
     
     std::cout << "Enter the name of a text file: ";
     std::cin  >> docName;
-    std::cout << std::endl;
     
     // 1. Read the document into a set of strings and print them to a file.
     std::string setOutputFilename = docName + "_set.txt";
@@ -51,7 +57,7 @@ int main() {
     while (!inFS.eof()) {
         std::string newString = "";
         inFS >> newString;
-        stripPunctuation(newString);
+        cleanToken(newString);
         stringSet.insert(newString);
     }
     
@@ -73,7 +79,9 @@ int main() {
     std::cout << std::endl << stringSet.size() << " elements in set for " << docName << ".txt" << std::endl;
     
     outFS.close();
-    std::cout << "File written to " << setOutputFilename << std::endl;
+    std::cout << "Set written to " << setOutputFilename << std::endl;
+    
+    
     
     
     // 2. Read the document into a vector of strings and print them to a file.
@@ -92,7 +100,7 @@ int main() {
     while (!inFS.eof()) {
         std::string newString = "";
         inFS >> newString;
-        stripPunctuation(newString);
+        cleanToken(newString);
         stringVector.push_back(newString);
     }
     
@@ -114,7 +122,9 @@ int main() {
     std::cout << std::endl << stringVector.size() << " elements in vector for " << docName << ".txt" << std::endl;
     
     outFS.close();
-    std::cout << "File written to " << vectorOutputFilename << std::endl;
+    std::cout << "Vector written to " << vectorOutputFilename << std::endl;
+    
+    
     
     
     // 3. Create a map from a string (the key) to a string (the value).
@@ -140,7 +150,9 @@ int main() {
     }
     
     outFS.close();
-    std::cout << "File written to " << mapOutputFilename << std::endl;
+    std::cout << "Map written to " << mapOutputFilename << std::endl;
+    
+    
     
     
     // 4. Generate text from this map.
@@ -148,10 +160,12 @@ int main() {
     std::string state = it->first;
     
     for (int i = 0; i < 100; i++) {
-        std::cout << wordMap[state] << " ";
+//        std::cout << wordMap[state] << " ";
         state = wordMap[state];
     }
-    std::cout << std::endl;
+//    std::cout << std::endl;
+    
+    
     
     
     // 5. Generate text from a map that pairs strings (keys) to a vector of strings (values).
@@ -163,16 +177,44 @@ int main() {
         state = *it;
     }
     
-    std::vector<std::string> nephiVector = newMap["Nephi"];
-    for (std::vector<std::string>::iterator it = nephiVector.begin(); it != nephiVector.end(); it++) {
-        std::cout << *it << ", ";
+    // Get the sixth element, to check we got this right.
+    std::map<std::string, std::vector<std::string>>::iterator mit = newMap.begin();
+    for (int i = 0; i < 5 && mit != newMap.end(); i++) {
+        mit++;
+    }
+    
+    if (mit == newMap.end()) {
+        std::cout << "Something went wrong. The map had fewer than six entries." << std::endl;
+        return 1;
+    }
+    
+    std::vector<std::string> sextoElemento = mit->second;
+    for (unsigned int i = 0; i < sextoElemento.size(); i++) {
+        std::string value = sextoElemento.at(i);
+//        std::cout << value;
+        if (i + 1 < sextoElemento.size()) {
+//            std::cout << ", ";
+        }
     }
     std::cout << std::endl;
     
     // 6. Generate text from a map composed of a list of strings as keys and vectors of strings as values.
+    // Make it random
+    srand(static_cast<unsigned int>(time(NULL)));
+    
+    state = "";
+    for (int i = 0; i < 100; i++) {
+        int index = rand() % newMap[state].size();
+        std::cout << newMap[state].at(index) << " ";
+        state = newMap[state].at(index);
+    }
+    
+    std::cout << std::endl;
     
     // 7. Explore different texts and methods, and observe when the algorithm produces interesting
     //      things. Have a little fun. Discuss what you did in your Canvas Submission.
+    
+    
     
     return 0;
 }

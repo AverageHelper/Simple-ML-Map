@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <vector>
+#include <list>
 #include <set>
 #include <map>
 
@@ -206,12 +208,7 @@ int main() {
     }
     std::cout << std::endl;
     
-    
-    
-    
-    // 6. Generate text from a map composed of a list of strings as keys and vectors of strings as values.
-    
-    // Make it random
+    // Make a random sermon
     srand(static_cast<unsigned int>(time(NULL)));
     
     state = "";
@@ -219,6 +216,40 @@ int main() {
         int index = rand() % newMap[state].size();
         std::cout << newMap[state].at(index) << " ";
         state = newMap[state].at(index);
+    }
+    
+    std::cout << std::endl << std::endl;
+    
+    
+    
+    
+    // 6. Generate text from a map composed of a list of strings as keys and vectors of strings as values.
+    
+    int context = 3;
+    std::map<std::list<std::string>, std::vector<std::string>> listMap;
+    std::list<std::string> stateList;
+    for (int i = 0; i < context; i++) {
+        stateList.push_back("");
+    }
+    
+    for (std::vector<std::string>::iterator it = stringVector.begin(); it != stringVector.end(); it++) {
+        listMap[stateList].push_back(*it);
+        stateList.push_back(*it);
+        stateList.pop_front();
+    }
+    
+    std::cout << "NEW SERMON:" << std::endl;
+    
+    stateList.clear();
+    for (int i = 0; i < context; i++) {
+        stateList.push_back("");
+    }
+    
+    for (int i = 0; i < 100; i++) {
+        int index = rand() % listMap[stateList].size();
+        std::cout << listMap[stateList].at(index) << " ";
+        stateList.push_back(listMap[stateList].at(index));
+        stateList.pop_front();
     }
     
     std::cout << std::endl;
